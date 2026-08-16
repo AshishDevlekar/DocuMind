@@ -30,20 +30,7 @@ React + Vite
 Tailwind CSS v4
 lucide-react (icons)
 
-Architecture
 
-┌─────────────┐         HTTPS          ┌──────────────┐
-│   Frontend   │ ─────────────────────▶ │   Backend    │
-│  (Vercel)    │ ◀───────────────────── │  (Render)    │
-│ React + Vite │      JSON / REST       │   FastAPI    │
-└─────────────┘                         └──────┬───────┘
-                                                │
-                                    ┌───────────┼───────────┐
-                                    ▼                       ▼
-                              ┌──────────┐           ┌────────────┐
-                              │ ChromaDB │           │  Groq API  │
-                              │ (vectors)│           │   (LLM)    │
-                              └──────────┘           └────────────┘
 The frontend and backend are deployed independently and communicate over HTTPS, with CORS explicitly configured on the backend to only accept requests from the deployed frontend's domain. Secrets (API keys) are stored as environment variables on the hosting platform and are never committed to source control.
 
 Project structure
