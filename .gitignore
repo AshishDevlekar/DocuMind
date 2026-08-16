@@ -1,0 +1,6 @@
+venv/
+node_modules/
+.env
+chroma_data/
+__pycache__/
+dist/
