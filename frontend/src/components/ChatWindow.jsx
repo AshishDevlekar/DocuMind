@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Brain, User } from "lucide-react";
+import { Send, Brain, User, Menu } from "lucide-react";
 import { askQuestion } from "../api";
 import SourceCitations from "./SourceCitations";
 
@@ -13,7 +13,7 @@ function TypingIndicator() {
   );
 }
 
-export default function ChatWindow({ hasDocuments, selectedDocId }) {
+export default function ChatWindow({ hasDocuments, selectedDocId, onOpenSidebar }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,6 +56,20 @@ export default function ChatWindow({ hasDocuments, selectedDocId }) {
 
   return (
     <div className="flex-1 flex flex-col h-full min-w-0">
+      {/* Mobile top bar */}
+      <div className="md:hidden flex items-center gap-3 border-b border-border bg-surface px-4 py-3 shrink-0">
+        <button
+          onClick={onOpenSidebar}
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-text hover:bg-bg shrink-0"
+        >
+          <Menu size={20} />
+        </button>
+        <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center shrink-0">
+          <Brain size={14} className="text-white" />
+        </div>
+        <span className="font-semibold text-text text-sm">DocuMind</span>
+      </div>
+
       <div className="flex-1 overflow-y-auto thin-scroll">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center px-6">
@@ -68,13 +82,13 @@ export default function ChatWindow({ hasDocuments, selectedDocId }) {
             <p className="text-sm text-text-soft max-w-sm">
               {hasDocuments
                 ? "Ask a question in plain English — answers are grounded in your uploaded PDFs, with page citations."
-                : "Use the Upload button on the left to add a PDF, then ask questions about it here."}
+                : "Use the Upload button to add a PDF, then ask questions about it here."}
             </p>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
+              <div key={i} className={`flex gap-2 sm:gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
                 {msg.role === "assistant" && (
                   <div className="w-8 h-8 rounded-lg bg-accent-soft flex items-center justify-center shrink-0">
                     <Brain size={16} className="text-accent" />
@@ -82,7 +96,7 @@ export default function ChatWindow({ hasDocuments, selectedDocId }) {
                 )}
 
                 <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 ${
                     msg.role === "user"
                       ? "bg-accent text-white rounded-br-sm"
                       : msg.error
@@ -118,16 +132,16 @@ export default function ChatWindow({ hasDocuments, selectedDocId }) {
         )}
       </div>
 
-      <div className="border-t border-border bg-surface px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-end gap-3">
+      <div className="border-t border-border bg-surface px-4 sm:px-6 py-3 sm:py-4 shrink-0">
+        <div className="max-w-3xl mx-auto flex items-end gap-2 sm:gap-3">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={!hasDocuments}
-            placeholder={hasDocuments ? "Ask a question about your documents…" : "Upload a document first"}
+            placeholder={hasDocuments ? "Ask a question…" : "Upload a document first"}
             rows={1}
-            className="flex-1 resize-none bg-bg border border-border rounded-xl px-4 py-2.5 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-60"
+            className="flex-1 resize-none bg-bg border border-border rounded-xl px-3.5 sm:px-4 py-2.5 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-60"
           />
           <button
             onClick={handleSend}
