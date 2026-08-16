@@ -7,6 +7,7 @@ function App() {
   const [documents, setDocuments] = useState([]);
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [backendError, setBackendError] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const refreshDocuments = useCallback(async () => {
     try {
@@ -40,14 +41,31 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex bg-bg overflow-hidden">
+    <div className="h-screen flex bg-bg overflow-hidden relative">
+      {/* Mobile backdrop — click to close sidebar */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-black/40 z-20 md:hidden"
+        />
+      )}
+
       <Sidebar
         documents={documents}
         onDocumentsChange={refreshDocuments}
         selectedDocId={selectedDocId}
-        onSelectDoc={setSelectedDocId}
+        onSelectDoc={(id) => {
+          setSelectedDocId(id);
+          setSidebarOpen(false); // auto-close on mobile after picking a doc
+        }}
+        sidebarOpen={sidebarOpen}
+        onCloseSidebar={() => setSidebarOpen(false)}
       />
-      <ChatWindow hasDocuments={documents.length > 0} selectedDocId={selectedDocId} />
+      <ChatWindow
+        hasDocuments={documents.length > 0}
+        selectedDocId={selectedDocId}
+        onOpenSidebar={() => setSidebarOpen(true)}
+      />
     </div>
   );
 }
