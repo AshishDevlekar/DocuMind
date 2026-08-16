@@ -34,21 +34,6 @@ lucide-react (icons)
 The frontend and backend are deployed independently and communicate over HTTPS, with CORS explicitly configured on the backend to only accept requests from the deployed frontend's domain. Secrets (API keys) are stored as environment variables on the hosting platform and are never committed to source control.
 
 Project structure
-documind/
-├── backend/
-│   ├── main.py          # FastAPI app — /upload, /documents, /query, /ask endpoints
-│   ├── ingest.py         # PDF text extraction + chunking
-│   ├── vectorstore.py    # ChromaDB setup + similarity search
-│   ├── llm.py            # Groq API call — generates the final answer
-│   └── requirements.txt
-└── frontend/
-    └── src/
-        ├── api.js
-        ├── App.jsx
-        └── components/
-            ├── Sidebar.jsx
-            ├── ChatWindow.jsx
-            └── SourceCitations.jsx
 
 Running locally
 cd backend
