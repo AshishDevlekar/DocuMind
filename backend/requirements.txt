@@ -6,3 +6,4 @@ chromadb==0.5.5
 pydantic==2.9.2
 python-dotenv==1.0.1
 groq==0.11.0
+httpx<0.28
