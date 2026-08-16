@@ -1,8 +1,15 @@
 import { useRef, useState } from "react";
-import { Upload, FileText, Trash2, Loader2, Brain } from "lucide-react";
+import { Upload, FileText, Trash2, Loader2, Brain, X } from "lucide-react";
 import { uploadDocument, deleteDocument } from "../api";
 
-export default function Sidebar({ documents, onDocumentsChange, selectedDocId, onSelectDoc }) {
+export default function Sidebar({
+  documents,
+  onDocumentsChange,
+  selectedDocId,
+  onSelectDoc,
+  sidebarOpen,
+  onCloseSidebar,
+}) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -20,7 +27,7 @@ export default function Sidebar({ documents, onDocumentsChange, selectedDocId, o
       setError(err.message);
     } finally {
       setUploading(false);
-      e.target.value = ""; // allow re-selecting the same file later
+      e.target.value = "";
     }
   }
 
@@ -36,15 +43,28 @@ export default function Sidebar({ documents, onDocumentsChange, selectedDocId, o
   }
 
   return (
-    <aside className="w-72 shrink-0 border-r border-border bg-surface flex flex-col h-full">
+    <aside
+      className={`
+        w-72 shrink-0 border-r border-border bg-surface flex flex-col h-full
+        fixed md:static inset-y-0 left-0 z-30
+        transform transition-transform duration-200 ease-in-out
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      `}
+    >
       <div className="px-5 py-5 border-b border-border flex items-center gap-2">
         <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shrink-0">
           <Brain size={18} className="text-white" />
         </div>
-        <div>
+        <div className="flex-1 min-w-0">
           <h1 className="font-semibold text-text leading-tight">DocuMind</h1>
           <p className="text-xs text-text-soft">Ask your documents anything</p>
         </div>
+        <button
+          onClick={onCloseSidebar}
+          className="md:hidden shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-soft hover:bg-bg"
+        >
+          <X size={18} />
+        </button>
       </div>
 
       <div className="p-4">
@@ -99,7 +119,7 @@ export default function Sidebar({ documents, onDocumentsChange, selectedDocId, o
                 <span className="flex-1 truncate">{doc.filename}</span>
                 <span
                   onClick={(e) => handleDelete(doc.doc_id, e)}
-                  className="opacity-0 group-hover:opacity-100 text-text-soft hover:text-red-600 transition-opacity"
+                  className="opacity-0 group-hover:opacity-100 md:opacity-0 text-text-soft hover:text-red-600 transition-opacity"
                 >
                   <Trash2 size={14} />
                 </span>
